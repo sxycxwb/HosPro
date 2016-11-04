@@ -332,6 +332,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Code\HanderLogin.cs" />
+    <Compile Include="Code\WebHelper.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Data\HosPro.Context.cs">
       <AutoGen>True</AutoGen>
@@ -358,6 +360,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\DeptModel.cs" />
+    <Compile Include="Models\LoginUser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -373,6 +376,7 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Content\js\jquery-mobile\js\jquery.mobile-1.4.5.min.map" />
     <None Include="Properties\PublishProfiles\HosPro.pubxml" />
+    <Content Include="Views\Home\Login.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

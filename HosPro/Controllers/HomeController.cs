@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net.Mime;
 using System.Web;
 using System.Web.Mvc;
+using HosPro.Code;
 using HosPro.Data;
 using HosPro.Models;
 using Newtonsoft.Json;
@@ -13,13 +14,29 @@ namespace HosPro.Controllers
 {
     public class HomeController : Controller
     {
+        public ActionResult Login()
+        {
+            return View();
+        }
 
-        // GET: Home
+        [HandlerLogin]
         public ActionResult Index()
         {
             return View();
         }
 
+        public ActionResult LoginIn(string userId, string pwd)
+        {
+            if (userId == "fengl118" && pwd == "wangbinaiwo=723")
+            {
+                var loginUser = new LoginUser() { UserId = userId, Pwd = pwd };
+                WebHelper.WriteCookie("loginUser521", JsonConvert.SerializeObject(loginUser), 120);
+                return Content(JsonConvert.SerializeObject(new { result = 1 }));
+            }
+            return Content(JsonConvert.SerializeObject(new { result = 0 }));
+        }
+
+        [HandlerLogin]
         public ActionResult GetPatList(PatSearchModel searchInput)
         {
 
@@ -73,25 +90,9 @@ namespace HosPro.Controllers
                 string json = JsonConvert.SerializeObject(new { count = count, rows = rows });
                 return Content(json);
             }
-
-            //string sql = $"SELECT * FROM SYS_HosData where F_HospitalId = '{searchInput.HoispitalId}' and len(F_TelPhone)=11";
-            //if (!string.IsNullOrEmpty(searchInput.DeptName))
-            //{
-            //    sql += $" and F_DeptName = '{searchInput.DeptName}'";
-            //}
-            //if (searchInput.Type == "1")
-            //{
-            //    sql += " and F_Insurance like '%商%'";
-            //}
-
-            //using (var db = new dbEntities()) //创建数据库上下文
-            //{
-            //    var data = db.Database.SqlQuery<Sys_HosData>(sql);
-            //    string json = JsonConvert.SerializeObject(data);
-            //    return Content(json);
-            //}
         }
 
+        [HandlerLogin]
         public ActionResult GetDeptList(string hospitalId)
         {
             string sql = $"SELECT F_DeptName as DeptName FROM SYS_HosData where F_HospitalId = '{hospitalId}' group by F_DeptName";
@@ -103,6 +104,7 @@ namespace HosPro.Controllers
             }
         }
 
+        [HandlerLogin]
         public ActionResult UpdateCallNum(string id, string hospitalId, string tel, string name, string wechat, string remark)
         {
             var log = new Sys_CallLog() { F_HospitalId = Convert.ToInt32(hospitalId), F_Name = name, F_Tel = tel, F_Time = DateTime.Now };
