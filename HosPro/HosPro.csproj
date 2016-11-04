@@ -375,6 +375,7 @@
     </Content>
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Content\js\jquery-mobile\js\jquery.mobile-1.4.5.min.map" />
+    <None Include="Properties\PublishProfiles\aa.pubxml" />
     <None Include="Properties\PublishProfiles\HosPro.pubxml" />
     <Content Include="Views\Home\Login.cshtml" />
     <None Include="Web.Debug.config">

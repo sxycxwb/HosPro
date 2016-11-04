@@ -48,7 +48,7 @@ namespace HosPro.Controllers
                 if (!string.IsNullOrEmpty(searchInput.DeptName))
                     list = list.Where(s => s.F_DeptName == searchInput.DeptName);//过滤科室
                 if (searchInput.Type == "1")
-                    list = list.Where(s => s.F_Insurance.Contains(searchInput.Type));//过滤类型
+                    list = list.Where(s => s.F_Insurance.Contains("商"));//过滤类型
                 #region 年龄范围
                 if (searchInput.AgeRange != 0)
                 {
