@@ -3,3 +3,9 @@
 ################################################################################
 
 /.vs/config/applicationhost.config
+/HosPro/bin
+/HosPro/obj
+/HosPro/Properties/PublishProfiles/HosPro.pubxml.user
+/HosPro/Properties/PublishProfiles/HosPro.pubxml
+/HosPro/HosPro.csproj.user
+/packages

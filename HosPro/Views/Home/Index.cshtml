@@ -1,0 +1,346 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    <link href="~/Content/js/jquery-mobile/css/themes/default/jquery.mobile-1.4.5.min.css" rel="stylesheet" />
+    <style>
+        .greenSpan,.redSpan {
+            display: inline-block;
+            width: 25px;
+            height: 25px;
+            font-size: 14px;
+            color: #fff;
+            text-align: center;
+            line-height: 25px;
+        }
+        .greenSpan {
+            background: #33FF00;
+        }
+        .redSpan {
+            background:red;
+        }
+    </style>
+</head>
+<body>
+    <div class="ui-field-contain">
+        <select name="hospitalSelect" id="hospitalSelect" data-inline="true">
+            <option value="1">北大人民</option>
+            <option value="2">西苑医院</option>
+            <option value="3">309医院</option>
+        </select>
+        <select name="deptSelect" id="deptSelect" data-inline="true">
+            <option value="0">全部科室</option>
+        </select>
+        <select name="typeSelect" id="typeSelect" data-inline="true">
+            <option value="0">全部类别</option>
+            <option value="1">商保</option>
+        </select>
+        <select name="ageSelect" id="ageSelect" data-inline="true">
+            <option value="0">全部年龄</option>
+            <option value="1">20岁以下</option>
+            <option value="2">20-30岁</option>
+            <option value="3">30-40岁</option>
+            <option value="4">40-50岁</option>
+            <option value="5">50-60岁</option>
+            <option value="6">60-70岁</option>
+            <option value="7">70岁以上</option>
+        </select>
+        <select name="callSelect" id="callSelect" data-inline="true">
+            <option value="">全部</option>
+            <option value="0" selected="selected">未呼</option>
+            <option value="1">已呼</option>
+        </select>
+        <div>
+            <button class="ui-btn ui-icon-search ui-btn-icon-left" id="search"> 搜 索 </button>
+        </div>
+    </div>
+
+    <table data-role="table" id="table-custom-2" data-mode="columntoggle" class="ui-body-d ui-shadow ui-responsive" data-column-btn-theme="b" data-column-btn-text="列表数据" data-column-popup-theme="a">
+        <thead>
+            <tr class="ui-bar-d">
+                <th>姓名</th>
+                <th>年龄</th>
+                <th>住院时间</th>
+                <th>呼叫</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody id="patTbody"></tbody>
+    </table>
+    <div data-role="popup" id="patPopup" class="ui-content" data-theme="a">
+        <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-left">Close</a>
+        <p>保险：<span class="pInsurance"></span></p>
+        <p>科室：<span class="pDeptName"></span></p>
+        <p>住址：<span class="pAddress"></span></p>
+        <p>备注：<span class="pRemark"></span></p>
+    </div>
+    <div data-role="footer" id="footer" data-position="fixed">
+        <div data-role="navbar">
+            <ul>
+                <li><a href="#" style="margin-top: 5px;" class="ui-state-disabled" id="firstPage">首页</a></li>
+                <li><a href="#" style="margin-top: 5px;" class="ui-state-disabled" id="prePage">上一页</a></li>
+                <li>
+                    <select name="selectPage" id="selectPage" data-mini="true">
+                        <option value="1">1</option>
+                    </select>
+                </li>
+                <li><a href="#" style="margin-top: 5px;" class="ui-state-disabled" id="nextPage">下一页</a></li>
+                <li><a href="#" style="margin-top: 5px;" class="ui-state-disabled" id="lastPage">末页</a></li>
+            </ul>
+        </div>
+    </div>
+    <div data-role="popup" id="popupConfirm" data-theme="a" class="ui-corner-all">
+        <form>
+            <div style="padding: 10px 20px;">
+                <h3>确认本次呼叫</h3>
+                <label for="wechat">微信重点客户:</label>
+                <select name="slider-flip-m" id="wechat" data-role="slider" data-mini="true">
+                    <option value="0">否</option>
+                    <option value="1">是</option>
+                </select>
+                <label for="pw" class="ui-hidden-accessible">备注信息：</label>
+                <textarea cols="40" rows="12" name="remark" id="remark" placeholder="备注" data-theme="a"></textarea>
+                <button type="button" id="btnConfirm" class="ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-icon-check">确 认</button>
+            </div>
+        </form>
+    </div>
+
+    <script src="~/Content/js/jquery-mobile/js/jquery.min.js"></script>
+    <script src="~/Content/js/jsrender.min.js"></script>
+    <script src="~/Content/js/jquery-mobile/js/jquery.mobile-1.4.5.min.js"></script>
+    <script src="~/Content/js/common.js"></script>
+    <script type="text/javascript">
+        var pageIndex = 1, pageSize = 15, totalCount = 1, totalPage = 1;
+
+        $(function () {
+            BindDept($('#hospitalSelect').val());
+            BindBtnEvent();
+        });
+
+        //按钮事件绑定
+        function BindBtnEvent() {
+            //切换医院
+            $('#hospitalSelect').change(function () {
+                BindDept($('#hospitalSelect').val());
+            });
+
+            //搜索按钮
+            $('#search').click(function () {
+                Search('init');
+            });
+
+            //首页事件
+            $('#firstPage').click(function () {
+                pageIndex = 1;
+                $('#selectPage').val(pageIndex);
+                $('#selectPage').selectmenu('refresh', true);
+                Search();
+            });
+            //尾页事件
+            $('#lastPage').click(function () {
+                pageIndex = totalPage;
+                $('#selectPage').val(pageIndex);
+                $('#selectPage').selectmenu('refresh', true);
+                Search();
+            });
+            //上一页事件
+            $('#prePage').click(function () {
+                var currentPage = $('#selectPage').val();
+                pageIndex = parseInt(currentPage) - 1;
+                $('#selectPage').val(pageIndex);
+                $('#selectPage').selectmenu('refresh', true);
+                Search();
+            });
+            //下一页事件
+            $('#nextPage').click(function () {
+                var currentPage = $('#selectPage').val();
+                pageIndex = parseInt(currentPage) + 1;
+                $('#selectPage').val(pageIndex);
+                $('#selectPage').selectmenu('refresh', true);
+                Search();
+            });
+
+            //页码选择事件
+            $('#selectPage').change(function () {
+                pageIndex = $(this).val();
+                Search();
+            });
+        }
+
+        //绑定科室
+        function BindDept(hospitalId) {
+            showLoader();
+            var postData = {
+                hospitalId: hospitalId
+            }
+
+            $.axs('/Home/GetDeptList', postData, function (data) {
+                $("#deptSelect option:not(:first)").remove();
+                for (var o in data) {
+                    $('#deptSelect').append('<option value="' + data[o].DeptName + '">' + data[o].DeptName + '</option>');
+                }
+                hideLoader();
+            });
+        }
+
+        $.views.helpers({
+            "dateStr": function (date) {
+                if (date)
+                    return date.substring(0, 10);
+                else return "";
+            },
+            "isCall": function (callNum) {
+                if (callNum == "0" || callNum == 0)
+                    return false;
+                else
+                    return true;
+            },
+            "isWeChat": function (weChat) {
+                if (weChat == "1" || weChat == 1)
+                    return true;
+                else
+                    return false;
+            },
+            "insuranceSub": function (date) {
+                if (date)
+                    return date.substring(0, 2);
+                else return "";
+            }
+
+        });
+
+        function Search(initFlag) {
+            showLoader();
+
+            var searchData = {
+                hospitalId: $('#hospitalSelect').val(),
+                deptName: $('#deptSelect').val(),
+                type: $('#typeSelect').val(),
+                ageRange: $('#ageSelect').val(),
+                callType: $('#callSelect').val(),
+                pageSize: pageSize,
+                pageIndex: pageIndex
+            };
+
+            $.axs('/Home/GetPatList', searchData, function (data) {
+                console.log(data);
+                totalCount = data.count;
+                RefreshPage(initFlag);
+                var template = $.templates("#tableTempl");
+                var htmlOutput = template.render(data.rows);
+                $("#patTbody").html(htmlOutput);
+
+                $('#patTbody tr a.ui-icon-phone').click(function () {
+                    var tel = $(this).attr('tel');
+                    var name = $(this).attr('name');
+                    var id = $(this).parent().parent().attr('id');
+                    Confirm(tel,name,id);
+                });
+
+                $('#patTbody tr a[data-transition="slide"]').click(function () {
+                    $('#patPopup .pInsurance').html($(this).attr('pInsurance'));
+                    $('#patPopup .pDeptName').html($(this).attr('pDeptName'));
+                    $('#patPopup .pAddress').html($(this).attr('pAddress'));
+                    $('#patPopup .pRemark').html($(this).attr('pRemark'));
+                    var options = {
+                        transition: 'slide'
+                    };
+                    $('#patPopup').popup("open", options);
+                });
+                hideLoader();
+            });
+        }
+
+        function RefreshPage(initFlag) {
+            totalPage = (totalCount % pageSize == 0) ? parseInt(totalCount / pageSize) : parseInt(totalCount / pageSize) + 1;
+            //重新搜索
+            if (initFlag) {
+                pageIndex = 1;
+                //绑定页码
+                $("#selectPage option:not(:first)").remove();
+                for (var i = 2; i <= totalPage; i++) {
+                    $("#selectPage").append('<option value="' + i + '">' + i + '</option>');
+                }
+            }
+            if (totalPage == 1) {
+                $('#firstPage').addClass('ui-state-disabled');
+                $('#prePage').addClass('ui-state-disabled');
+                $('#selectPage').addClass('ui-state-disabled');
+                $('#nextPage').addClass('ui-state-disabled');
+                $('#lastPage').addClass('ui-state-disabled');
+            } else {
+                //第一页
+                if (pageIndex == 1) {
+                    $('#firstPage').addClass('ui-state-disabled');
+                    $('#prePage').addClass('ui-state-disabled');
+                    $('#selectPage').removeClass('ui-state-disabled');
+                    $('#nextPage').removeClass('ui-state-disabled');
+                    $('#lastPage').removeClass('ui-state-disabled');
+                }
+                    //尾页
+                else if (pageIndex == totalPage) {
+                    $('#firstPage').removeClass('ui-state-disabled');
+                    $('#prePage').removeClass('ui-state-disabled');
+                    $('#selectPage').removeClass('ui-state-disabled');
+                    $('#nextPage').addClass('ui-state-disabled');
+                    $('#lastPage').addClass('ui-state-disabled');
+                }
+                    //其它页
+                else {
+                    $('#firstPage').removeClass('ui-state-disabled');
+                    $('#prePage').removeClass('ui-state-disabled');
+                    $('#selectPage').removeClass('ui-state-disabled');
+                    $('#nextPage').removeClass('ui-state-disabled');
+                    $('#lastPage').removeClass('ui-state-disabled');
+                }
+            }
+
+        }
+
+        function Confirm(tel, name, id) {
+            
+
+            $('#popupConfirm').popup("open");
+
+            $('#btnConfirm').click(function () {
+                var postData = {
+                    hospitalId: $('#hospitalSelect').val(),
+                    tel: tel,
+                    id: id,
+                    name: name,
+                    wechat: $('#wechat').val(),
+                    remark: $('#remark').val()
+                };
+                $('#popupConfirm').popup("close");
+                var td = $('#' + id).find('td.flagTd');
+                var span = $(td).find('span.greenSpan');
+                $.axs('/Home/UpdateCallNum', postData, function (data) {
+                    Search();
+                });
+            });
+        }
+
+    </script>
+</body>
+</html>
+<script id="tableTempl" type="text/x-jsrender">
+    <tr id="{{:F_Id}}">
+        <td><a href="#" data-transition="slide" class="ui-corner-all ui-shadow ui-btn-inline" style="font-weight:bold;" pAddress="{{:F_Address}}" pInsurance="{{:F_Insurance}}" pDeptName="{{:F_DeptName}}" pRemark="{{:F_Remark}}">{{:F_Name}}</a></td>
+        <td>{{:F_Age}}</td>
+        <td>{{:~dateStr(F_AdmissionTime)}}</td>
+        <td>
+            {{if ~isCall(F_CallNum)}}
+            <span class="greenSpan">{{:F_CallNum}}</span>
+            {{/if}}
+            {{if ~isWeChat(F_WeChatFlag)}}
+            <span class="redSpan">微</span>
+            {{/if}}
+            
+        </td>
+        <td><a href="tel:{{:F_TelPhone}}" class="ui-btn ui-btn-inline ui-icon-phone ui-btn-icon-right" name="{{:F_Name}}" tel="{{:F_TelPhone}}" data-mini="true">电</a></td>
+    </tr>
+
+</script>
+

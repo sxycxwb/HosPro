@@ -1,0 +1,147 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="drpdbModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Sys_CallLog">
+          <Key>
+            <PropertyRef Name="F_Id" />
+          </Key>
+          <Property Name="F_Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="F_HospitalId" Type="int" />
+          <Property Name="F_Name" Type="varchar" MaxLength="50" />
+          <Property Name="F_Tel" Type="varchar" MaxLength="20" />
+          <Property Name="F_Time" Type="datetime" />
+        </EntityType>
+        <EntityType Name="Sys_HosData">
+          <Key>
+            <PropertyRef Name="F_Id" />
+          </Key>
+          <Property Name="F_Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="F_Name" Type="varchar" MaxLength="50" />
+          <Property Name="F_Sex" Type="varchar" MaxLength="4" />
+          <Property Name="F_IdNo" Type="varchar" MaxLength="40" />
+          <Property Name="F_TelPhone" Type="varchar" MaxLength="15" />
+          <Property Name="F_Insurance" Type="varchar" MaxLength="50" />
+          <Property Name="F_BirthDay" Type="datetime" />
+          <Property Name="F_Age" Type="int" />
+          <Property Name="F_Status" Type="varchar" MaxLength="20" />
+          <Property Name="F_AdmissionTime" Type="datetime" />
+          <Property Name="F_DeptName" Type="varchar" MaxLength="100" />
+          <Property Name="F_Address" Type="varchar" MaxLength="300" />
+          <Property Name="F_Diagnosis" Type="varchar" MaxLength="200" />
+          <Property Name="F_HospitalId" Type="int" />
+          <Property Name="F_CallNum" Type="int" />
+          <Property Name="F_WeChatFlag" Type="smallint" />
+          <Property Name="F_Remark" Type="varchar" MaxLength="200" />
+        </EntityType>
+        <EntityContainer Name="drpdbModelStoreContainer">
+          <EntitySet Name="Sys_CallLog" EntityType="Self.Sys_CallLog" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Sys_HosData" EntityType="Self.Sys_HosData" Schema="dbo" store:Type="Tables" />
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="drpdbModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Sys_HosData">
+          <Key>
+            <PropertyRef Name="F_Id" />
+          </Key>
+          <Property Name="F_Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="F_Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="F_Sex" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="F_IdNo" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="F_TelPhone" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="F_Insurance" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="F_BirthDay" Type="DateTime" Precision="3" />
+          <Property Name="F_Age" Type="Int32" />
+          <Property Name="F_Status" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="F_AdmissionTime" Type="DateTime" Precision="3" />
+          <Property Name="F_DeptName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="F_Address" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Name="F_Diagnosis" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="F_HospitalId" Type="Int32" />
+          <Property Name="F_CallNum" Type="Int32" />
+          <Property Name="F_WeChatFlag" Type="Int16" />
+          <Property Name="F_Remark" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityContainer Name="dbEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Sys_HosData" EntityType="Self.Sys_HosData" />
+          <EntitySet Name="Sys_CallLog" EntityType="drpdbModel.Sys_CallLog" />
+        </EntityContainer>
+        <EntityType Name="Sys_CallLog">
+          <Key>
+            <PropertyRef Name="F_Id" />
+          </Key>
+          <Property Name="F_Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="F_HospitalId" Type="Int32" />
+          <Property Name="F_Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="F_Tel" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="F_Time" Type="DateTime" Precision="3" />
+        </EntityType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="drpdbModelStoreContainer" CdmEntityContainer="dbEntities">
+          <EntitySetMapping Name="Sys_HosData">
+            <EntityTypeMapping TypeName="drpdbModel.Sys_HosData">
+              <MappingFragment StoreEntitySet="Sys_HosData">
+                <ScalarProperty Name="F_Remark" ColumnName="F_Remark" />
+                <ScalarProperty Name="F_Id" ColumnName="F_Id" />
+                <ScalarProperty Name="F_Name" ColumnName="F_Name" />
+                <ScalarProperty Name="F_Sex" ColumnName="F_Sex" />
+                <ScalarProperty Name="F_IdNo" ColumnName="F_IdNo" />
+                <ScalarProperty Name="F_TelPhone" ColumnName="F_TelPhone" />
+                <ScalarProperty Name="F_Insurance" ColumnName="F_Insurance" />
+                <ScalarProperty Name="F_BirthDay" ColumnName="F_BirthDay" />
+                <ScalarProperty Name="F_Age" ColumnName="F_Age" />
+                <ScalarProperty Name="F_Status" ColumnName="F_Status" />
+                <ScalarProperty Name="F_AdmissionTime" ColumnName="F_AdmissionTime" />
+                <ScalarProperty Name="F_DeptName" ColumnName="F_DeptName" />
+                <ScalarProperty Name="F_Address" ColumnName="F_Address" />
+                <ScalarProperty Name="F_Diagnosis" ColumnName="F_Diagnosis" />
+                <ScalarProperty Name="F_HospitalId" ColumnName="F_HospitalId" />
+                <ScalarProperty Name="F_CallNum" ColumnName="F_CallNum" />
+                <ScalarProperty Name="F_WeChatFlag" ColumnName="F_WeChatFlag" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Sys_CallLog">
+            <EntityTypeMapping TypeName="drpdbModel.Sys_CallLog">
+              <MappingFragment StoreEntitySet="Sys_CallLog">
+                <ScalarProperty Name="F_Time" ColumnName="F_Time" />
+                <ScalarProperty Name="F_Tel" ColumnName="F_Tel" />
+                <ScalarProperty Name="F_Name" ColumnName="F_Name" />
+                <ScalarProperty Name="F_HospitalId" ColumnName="F_HospitalId" />
+                <ScalarProperty Name="F_Id" ColumnName="F_Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="false" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="无" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
